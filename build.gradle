@@ -1,0 +1,43 @@
+plugins {
+    id "java"
+    id "idea"
+}
+
+version = '1.0'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    jcenter()
+
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src'
+        }
+    }
+}
+
+dependencies {
+    //compile group: 'se.jiderhamn.classloader-leak-prevention', name: 'classloader-leak-prevention-core', version: '2.6.1'
+    //compile group: 'se.jiderhamn', name: 'classloader-leak-prevention', version: '1.15.4'
+    //compile group: 'se.jiderhamn', name: 'classloader-leak-prevention', version: '1.15.4'
+    compile 'junit:junit:4.12'
+
+    testCompile 'junit:junit:4.12'
+    testCompile group: 'se.jiderhamn.classloader-leak-prevention', name: 'classloader-leak-prevention-core', version: '2.6.1'
+}
+
+jar {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
+
+    baseName 'mljdbc'
+}

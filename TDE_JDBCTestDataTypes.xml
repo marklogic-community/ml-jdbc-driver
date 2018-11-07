@@ -1,0 +1,152 @@
+xquery version "1.0-ml";
+
+import module namespace tde = "http://marklogic.com/xdmp/tde" 
+        at "/MarkLogic/tde.xqy";
+
+let $tde :=
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>Template Driven Extraction for JDBC Test</description>
+  <context>/envelope</context>
+  <rows>
+	<row>
+	  <schema-name>JDBCTest</schema-name>
+	  <view-name>DataTypes</view-name>
+	  <view-layout>sparse</view-layout>
+	  <columns>
+	    <column>
+	      <name>"key"</name>
+	      <scalar-type>string</scalar-type>
+	      <val>xs:string("key")</val>
+	      <nullable>false</nullable>
+	    </column>
+	    <column>
+	      <name>"string"</name>
+	      <scalar-type>string</scalar-type>
+	      <val>xs:string("string")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"int"</name>
+	      <scalar-type>int</scalar-type>
+	      <val>xs:int(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"unsignedInt"</name>
+	      <scalar-type>unsignedInt</scalar-type>
+	      <val>xs:unsignedInt(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+      <!--
+	    <column>
+	      <name>"byte"</name>
+	      <scalar-type>byte</scalar-type>
+	      <val>xs:byte(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"unsignedByte"</name>
+	      <scalar-type>unsignedByte</scalar-type>
+	      <val>xs:unsignedByte(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"short"</name>
+	      <scalar-type>short</scalar-type>
+	      <val>xs:short(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"unsignedShort"</name>
+	      <scalar-type>unsignedShort</scalar-type>
+	      <val>xs:unsignedShort(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+      -->
+	    <column>
+	      <name>"long"</name>
+	      <scalar-type>long</scalar-type>
+	      <val>xs:long(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"unsignedLong"</name>
+	      <scalar-type>unsignedLong</scalar-type>
+	      <val>xs:unsignedLong(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"decimal"</name>
+	      <scalar-type>decimal</scalar-type>
+	      <val>xs:decimal(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"float"</name>
+	      <scalar-type>float</scalar-type>
+	      <val>xs:float(1.1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"double"</name>
+	      <scalar-type>double</scalar-type>
+	      <val>xs:double(1.1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"boolean"</name>
+	      <scalar-type>boolean</scalar-type>
+	      <val>xs:boolean(fn:true())</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"date"</name>
+	      <scalar-type>date</scalar-type>
+	      <val>xs:date("2018-01-01")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"time"</name>
+	      <scalar-type>time</scalar-type>
+	      <val>xs:time("12:00:00")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"dateTime"</name>
+	      <scalar-type>dateTime</scalar-type>
+	      <val>xs:dateTime("2018-01-01T00:00:00")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"anyURI"</name>
+	      <scalar-type>anyURI</scalar-type>
+	      <val>xs:anyURI("anyURI")</val>
+	      <nullable>true</nullable>
+	    </column>
+<!--
+	    <column>
+	      <name>"gYear"</name>
+	      <scalar-type>gYear</scalar-type>
+	      <val>xs:dateTime("2018")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"point"</name>
+	      <scalar-type>point</scalar-type>
+	      <val>{cts:point(0.373899653086420E+02, -0.122078578406509E+03)}</val>
+	      <nullable>true</nullable>
+	    </column>
+-->      
+	  </columns>
+	</row>
+  </rows>
+</template>
+return
+tde:template-insert(
+          "/tde-template/" ||  "TDE_JDBCTestDataTypes" || ".xml",
+          $tde,
+          (
+            xdmp:permission("rest-reader", "read"),
+            xdmp:permission("rest-writer", "update")
+          )
+        )
