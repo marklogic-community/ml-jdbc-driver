@@ -694,9 +694,12 @@ public class PgConnection implements BaseConnection {
     }
 
     if (readOnly != this.readOnly) {
-      LOGGER.log(Level.INFO, "Ignoring invocation of setReadOnly = {0}", readOnly);
+      String readOnlySql
+             = "SET SESSION CHARACTERISTICS AS TRANSACTION " + (readOnly ? "READ ONLY" : "READ WRITE");
+      execSQLUpdate(readOnlySql); // nb: no BEGIN triggered.
     }
 
+    this.readOnly = readOnly;
     LOGGER.log(Level.FINE, "  setReadOnly = {0}", readOnly);
   }
 

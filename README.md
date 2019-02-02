@@ -128,6 +128,10 @@ And the error log contains:
 `Info: [Event:id=ODBCConnectionTask SendMessage] 71 [error response] <= E SERROR C08000 MXDMP-INTERNAL: Internal error: Password incorrect`
 Be sure the password is correctly encoded in your JAVA for Digest authentication
 
+`readonly=true` can optionally be configured since MarkLogic only supports read-only operations over SQL.
+
+Driver URL: `jdbc:marklogic://localhost:8077/?readonly=true`
+
 For logging and debugging in the driver loggerLevel=TRACE or loggerLevel=DEBUG can be configured to see driver-level messages on the client.
 Use loggerFile=pgjdbc-trace.log for capturing log.
 
