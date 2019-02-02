@@ -1812,7 +1812,7 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
     sql += " c.name AS COLUMN_NAME,";
     sql += " c.type AS TYPE_NAME,";
     sql += " pg_type_id(c.type) as atttypid,";
-    sql += " 0 as atttypmod,";
+    sql += " -1 as atttypmod,";
     sql += " c.dflt_value AS COLUMN_DEF,";
     sql += " c.cid AS ORDINAL_POSITION,";
     sql += " c.notnull AS attnotnull";
@@ -2252,7 +2252,7 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
         + " ORDER BY a.attnum ";
 */
 
-    sql = "SELECT name as attname, pg_type_id(type) as atttypid, 0 as atttypmod "
+    sql = "SELECT name as attname, pg_type_id(type) as atttypid, -1 as atttypmod "
         + " from sys.sys_columns "
         + " WHERE 1 ";
 
