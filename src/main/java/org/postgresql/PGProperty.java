@@ -129,7 +129,7 @@ public enum PGProperty {
   /**
    * Puts this connection in read-only mode.
    */
-  READ_ONLY("readOnly", "false", "Puts this connection in read-only mode"),
+  READ_ONLY("readOnly", "true", "Puts this connection in read-only mode"),
 
   /**
    * Comma separated list of types to enable binary transfer. Either OID numbers or names
