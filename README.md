@@ -563,7 +563,7 @@ SET DateStyle = 'ISO';SET extra_float_digits = 2;show transaction_isolation
 show transaction_isolation;SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL READ COMMITTED
 ```
 ```
-select * from (select schema as nspname, table as relname, name as attname, pg_type_id(type) as atttypid, type as typname, cid as attnum, pg_type_size(type) as attlen, -1 as atttypmod, 'notnull' as attnotnull, 0 as relhasrules, type as relkind, 0 as oid, 0, 0, -1, 1, '' from sys.sys_columns) where 1 and relname like 'MHF' and nspname like 'Beacon' order by nspname, relname, attnum
+select * from (select schema as nspname, table as relname, name as attname, pg_type_id(type) as atttypid, type as typname, cid as attnum, pg_type_size(type) as attlen, 0 as atttypmod, 'notnull' as attnotnull, 0 as relhasrules, type as relkind, 0 as oid, 0, 0, -1, 1, '' from sys.sys_columns) where 1 and relname like 'MHF' and nspname like 'Beacon' order by nspname, relname, attnum
 ```
 ```
 select * from (select name as relname, schema as nspname, type as relkind from sys.sys_tables) where 1 and nspname like '%' and relname like '%'
@@ -616,7 +616,7 @@ sys.sys_tables) where 1 and nspname not in ('sys')]
 
 -- [select * from (select schema as nspname, table as relname, name as attname,
 pg_type_id(type) as atttypid, type as typname, cid as attnum, pg_type_size(type)
-as attlen, -1 as atttypmod, 'notnull' as attnotnull, 0 as relhasrules, type as
+as attlen, 0 as atttypmod, 'notnull' as attnotnull, 0 as relhasrules, type as
 relkind, 0 as oid, 0, 0, -1 from sys.sys_columns) where 1 and relname like
 'employees' and nspname like 'main' order by nspname, relname, attnum]
 
@@ -626,7 +626,7 @@ relkind, 0 as oid, 0, 0, -1 from sys.sys_columns) where 1 and relname like
 SQLGetTypeInfo 
 -- [select * from (select schema as nspname, table as relname, name as attname,
 pg_type_id(type) as atttypid, type as typname, cid as attnum, pg_type_size(type)
-as attlen, -1 as atttypmod, 'notnull' as attnotnull, 0 as relhasrules, type as
+as attlen, 0 as atttypmod, 'notnull' as attnotnull, 0 as relhasrules, type as
 relkind, 0 as oid, 0, 0, -1 from sys.sys_columns) where 1 and relname like
 'employees' and nspname like 'main' order by nspname, relname, attnum]
 [select * from (select -1, type as relkind from sys.sys_tables) where 1 and name
