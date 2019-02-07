@@ -120,7 +120,8 @@ public class PgConnection implements BaseConnection {
   // Connection's autocommit state.
   private boolean autoCommit = true;
   // Connection's readonly state.
-  private boolean readOnly = false;
+//  private boolean readOnly = false;
+  private boolean readOnly = true;
 
   // Bind String to UNSPECIFIED or VARCHAR?
   private final boolean bindStringAsVarchar;
@@ -437,8 +438,8 @@ public class PgConnection implements BaseConnection {
     BaseStatement stmt = (BaseStatement) createStatement();
     if (stmt.executeWithFlags(s, QueryExecutor.QUERY_NO_METADATA | QueryExecutor.QUERY_NO_RESULTS
         | QueryExecutor.QUERY_SUPPRESS_BEGIN)) {
-      throw new PSQLException(GT.tr("A result was returned when none was expected."),
-          PSQLState.TOO_MANY_RESULTS);
+//      throw new PSQLException(GT.tr("A result was returned when none was expected."),
+//          PSQLState.TOO_MANY_RESULTS);
     }
 
     // Transfer warnings to the connection, since the user never
@@ -715,12 +716,20 @@ public class PgConnection implements BaseConnection {
       return;
     }
 
-    if (!this.autoCommit) {
-      commit();
+    if (!autoCommit) {
+      throw new PSQLException(GT.tr("AutoCommit false setting is not supported."),
+        PSQLState.NOT_IMPLEMENTED);
     }
+    if (!this.autoCommit) {
+      throw new PSQLException(GT.tr("AutoCommit false default is not supported."),
+        PSQLState.NOT_IMPLEMENTED);
+    }
+//    if (!this.autoCommit) {
+//      commit();
+//    }
 
-    this.autoCommit = autoCommit;
-    LOGGER.log(Level.FINE, "  setAutoCommit = {0}", autoCommit);
+//    this.autoCommit = autoCommit;
+//    LOGGER.log(Level.FINE, "  setAutoCommit = {0}", autoCommit);
   }
 
   public boolean getAutoCommit() throws SQLException {
