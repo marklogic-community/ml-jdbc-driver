@@ -3,6 +3,38 @@ xquery version "1.0-ml";
 import module namespace tde = "http://marklogic.com/xdmp/tde" 
         at "/MarkLogic/tde.xqy";
 
+(: ML type to oid.java via pg_type_id('string') as atttypmod=1043 in PgDatabaseMetaData
+string,1043
+int,23
+unsignedInt,23
+long,20
+unsignedLong,20
+decimal,1700
+float,700
+double,701
+boolean,16
+date,1082
+time,1266
+dateTime,1184
+anyURI,25
+point,600 - not working
+
+string		varchar
+int		int4
+unsignedInt	int4
+long		int8
+unsignedLong	int8
+decimal		numeric
+float		float4
+double		float8
+boolean		bool
+date		date
+time		timetz
+dateTime	timestamptz
+anyURI		text
+point		point
+:)
+
 let $tde :=
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>Template Driven Extraction for JDBC Test</description>
@@ -37,32 +69,6 @@ let $tde :=
 	      <val>xs:unsignedInt(1)</val>
 	      <nullable>true</nullable>
 	    </column>
-      <!--
-	    <column>
-	      <name>"byte"</name>
-	      <scalar-type>byte</scalar-type>
-	      <val>xs:byte(1)</val>
-	      <nullable>true</nullable>
-	    </column>
-	    <column>
-	      <name>"unsignedByte"</name>
-	      <scalar-type>unsignedByte</scalar-type>
-	      <val>xs:unsignedByte(1)</val>
-	      <nullable>true</nullable>
-	    </column>
-	    <column>
-	      <name>"short"</name>
-	      <scalar-type>short</scalar-type>
-	      <val>xs:short(1)</val>
-	      <nullable>true</nullable>
-	    </column>
-	    <column>
-	      <name>"unsignedShort"</name>
-	      <scalar-type>unsignedShort</scalar-type>
-	      <val>xs:unsignedShort(1)</val>
-	      <nullable>true</nullable>
-	    </column>
-      -->
 	    <column>
 	      <name>"long"</name>
 	      <scalar-type>long</scalar-type>
@@ -123,6 +129,44 @@ let $tde :=
 	      <val>xs:anyURI("anyURI")</val>
 	      <nullable>true</nullable>
 	    </column>
+<!-- select pg_type_id('point'); returns 600 correctly but point does not work-->
+<!--
+	    <column>
+	      <name>"point"</name>
+	      <scalar-type>point</scalar-type>
+	      <val>(1,3)</val>
+	      <nullable>true</nullable>
+	    </column>
+-->
+<!-- select pg_type_id('short'); returns 0 and does not work -->
+<!--
+	    <column>
+	      <name>"short"</name>
+	      <scalar-type>short</scalar-type>
+	      <val>xs:short(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"unsignedShort"</name>
+	      <scalar-type>unsignedShort</scalar-type>
+	      <val>xs:unsignedShort(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+-->
+<!--
+	    <column>
+	      <name>"byte"</name>
+	      <scalar-type>byte</scalar-type>
+	      <val>xs:byte(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"unsignedByte"</name>
+	      <scalar-type>unsignedByte</scalar-type>
+	      <val>xs:unsignedByte(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+-->
 <!--
 	    <column>
 	      <name>"gYear"</name>
@@ -130,13 +174,59 @@ let $tde :=
 	      <val>xs:dateTime("2018")</val>
 	      <nullable>true</nullable>
 	    </column>
+-->      
+<!--
 	    <column>
-	      <name>"point"</name>
-	      <scalar-type>point</scalar-type>
-	      <val>{cts:point(0.373899653086420E+02, -0.122078578406509E+03)}</val>
+	      <name>"number"</name>
+	      <scalar-type>number</scalar-type>
+	      <val>xs:number(1)</val>
 	      <nullable>true</nullable>
 	    </column>
--->      
+-->
+<!--
+	    <column>
+	      <name>"integer"</name>
+	      <scalar-type>integer</scalar-type>
+	      <val>xs:integer(1)</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"duration"</name>
+	      <scalar-type>duration</scalar-type>
+	      <val>xs:duration("P3Y5M4D")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"yearMonthDuration"</name>
+	      <scalar-type>yearMonthDuration</scalar-type>
+	      <val>xs:yearMonthDuration("P3Y5M")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"dayTimeDuration"</name>
+	      <scalar-type>dayTimeDuration</scalar-type>
+	      <val>xs:dayTimeDuration("P5DT2H12M")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"gDay"</name>
+	      <scalar-type>gDay</scalar-type>
+	      <val>xs:gDay("14")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"gMonth"</name>
+	      <scalar-type>gMonth</scalar-type>
+	      <val>xs:gMonth("04")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"gYear"</name>
+	      <scalar-type>gYear</scalar-type>
+	      <val>xs:gYear("2001")</val>
+	      <nullable>true</nullable>
+	    </column>
+-->
 	  </columns>
 	</row>
   </rows>
@@ -150,3 +240,30 @@ tde:template-insert(
             xdmp:permission("rest-writer", "update")
           )
         )
+
+(: 
+number
+string
+decimal
+integer
+long
+int
+short
+byte
+float
+double
+boolean
+date
+time
+dateTime
+gDay
+gMonth
+gYear
+gYearMonth
+gMonthDay
+duration
+dayTimeDuration
+yearMonthDuration
+castable-as
+anyURI
+:)

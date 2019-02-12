@@ -3,7 +3,10 @@ plugins {
     id "idea"
 }
 
-version = '0.3'
+version = '0.4'
+ext.majorversion = '0'
+ext.minorversion = '4'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -41,3 +44,36 @@ jar {
 
     baseName 'mljdbc'
 }
+
+task copyJar(type: Copy) {
+    from jar // here it automatically reads jar file produced from jar task
+    into "$projectDir/jar"
+    rename {'mljdbc-42.1.4.jar'}
+}
+
+build.dependsOn copyJar
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task processSources(type: Sync) {
+//    from 'src/main/java/org/postgresql/util/DriverInfo.java'
+    from sourceSets.main.java
+exclude 'com'
+exclude 'org'
+    inputs.property 'majorversion', majorversion
+    inputs.property 'minorversion', minorversion
+    filteringCharset = 'UTF-8'
+    filter(ReplaceTokens, tokens: 
+        [
+            '$mvn.project.property.parsedversion.osgiversion$': majorversion+'.'+minorversion,
+            '$mvn.project.property.parsedversion.majorversion$': majorversion,
+            '$mvn.project.property.parsedversion.minorversion$': minorversion
+        ])
+    into "$buildDir/src"
+}
+
+compileJava {
+    source = processSources.outputs
+}
+
+

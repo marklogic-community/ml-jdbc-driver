@@ -70,7 +70,7 @@ Then Download:
 ```
 MarkLogic JDBC 4.2 Driver, 42.1.4
 ```
-> [https://project.marklogic.com/repo/projects/NACE/repos/ml-jdbc-driver/browse/mljdbc-42.1.4.jar](https://project.marklogic.com/repo/projects/NACE/repos/ml-jdbc-driver/browse/mljdbc-42.1.4.jar)
+> [https://github.com/marklogic-community/ml-jdbc-driver/blob/master/jar/mljdbc-42.1.4.jar](https://github.com/marklogic-community/ml-jdbc-driver/blob/master/jar/mljdbc-42.1.4.jar)
 
 or
 ```
@@ -94,7 +94,7 @@ Driver URL: "jdbc:postgresql://localhost:8077/?preferQueryMode=simple"
 
 License
 -------
-- Be sure to include required [LICENSE.txt](https://project.marklogic.com/repo/projects/NACE/repos/ml-jdbc-driver/browse/LICENSE.txt) and [NOTICE.txt](https://project.marklogic.com/repo/projects/NACE/repos/ml-jdbc-driver/browse/NOTICE.txt) files with delivery. 
+- Be sure to include required [LICENSE.txt](https://github.com/marklogic-community/ml-jdbc-driver/blob/master/LICENSE.txt) and [NOTICE.txt](https://github.com/marklogic-community/ml-jdbc-driver/blob/master/NOTICE.txt) files with delivery. 
 
 Documentation
 -----------
@@ -308,7 +308,12 @@ The jar can be built using:
 The unit tests can be run with:
               `gradle test`
 
-Copied the original PostgreSQL test classes and found 519 / 9108 tests succeeded out of the box (8589 failed)
+Copied the original PostgreSQL test classes and found 519
+
+9108 tests succeeded out of the box (8589 failed)
+```
+9108 tests completed, 8589 failed, 6 skipped
+```
 
 The sources are now in:
 ```
@@ -318,11 +323,7 @@ The sources are now in:
 
 Kept the files/directories for now, but we can/should remove it later.
 ```
-              / https-github-com-pgjdbc
-              /com
-              /org
-              /build.bat
-              /mljdbc-42.1.4.jar
+              /https-github-com-pgjdbc
               /postgresql-42.1.4.jar
               /postgresql-jdbc-head-doc.tar.gz
 ```
@@ -375,6 +376,8 @@ modify "supports*" eg. supportsAlterTable*
 
 Change "attnotnull" from rs.getBoolean("attnotnull") to (rs.getInt("attnotnull") != 0) for IS_NULLABLE and NULLABLE
 
+Remove bytea and uuid data types
+
 org/postgresql/jdbc/TimestampUtils
 ------------------
 Transform ISO-8601 dateTime to datetimetz by replacing 'T' with ' '
@@ -400,6 +403,8 @@ org/postgresql/util/DriverInfo
 Additional ML vendor branding
 
 Changed static DRIVER_NAME, DRIVER_SHORT_NAME for ML
+
+Update to support version number from gradle
 
 org/postgresql/jdbc/PgConnection
 ----------------
@@ -466,7 +471,7 @@ getNumericFunctions
 getSystemFunctions
 getDateFunctions
 
-Setup TDE with data types [TDE_JDBCTestDataTypes.xml](https://project.marklogic.com/repo/projects/NACE/repos/ml-jdbc-driver/browse/TDE_JDBCTestDataTypes.xml) (string, int, unsignedInt, long, unsignedLong, decimal, float, double, boolean, date, time, dateTime, anyUri)
+Setup TDE with data types [TDE_JDBCTestDataTypes.xml](https://github.com/marklogic-community/ml-jdbc-driver/blob/master/TDE_JDBCTestDataTypes.xml) (string, int, unsignedInt, long, unsignedLong, decimal, float, double, boolean, date, time, dateTime, anyUri)
 
 Reference
 ---------
