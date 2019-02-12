@@ -2545,7 +2545,7 @@ TIMESTAMP	java.sql.Timestamp
 
     sql = ""
           + "       SELECT 'bool'," + Oid.BOOL
-          + " UNION SELECT 'bytea'," + Oid.BYTEA
+//          + " UNION SELECT 'bytea'," + Oid.BYTEA
           + " UNION SELECT 'char'," + Oid.CHAR
           + " UNION SELECT 'date'," + Oid.DATE
           + " UNION SELECT 'float4'," + Oid.FLOAT4
@@ -2557,7 +2557,7 @@ TIMESTAMP	java.sql.Timestamp
           + " UNION SELECT 'text'," + Oid.TEXT
           + " UNION SELECT 'time'," + Oid.TIME
           + " UNION SELECT 'timestamptz'," + Oid.TIMESTAMPTZ
-          + " UNION SELECT 'uuid'," + Oid.UUID
+//          + " UNION SELECT 'uuid'," + Oid.UUID
           + " UNION SELECT 'varchar'," + Oid.VARCHAR;
 
 
@@ -2611,6 +2611,7 @@ TIMESTAMP	java.sql.Timestamp
       tuple[17] = b10; // everything is base 10
       v.add(tuple);
 
+/* remove serial autoincrement
       // add pseudo-type serial, bigserial
       if (typname.equals("int4")) {
         byte[][] tuple1 = tuple.clone();
@@ -2625,7 +2626,7 @@ TIMESTAMP	java.sql.Timestamp
         tuple1[11] = bt;
         v.add(tuple1);
       }
-
+*/
     }
     rs.close();
     stmt.close();
