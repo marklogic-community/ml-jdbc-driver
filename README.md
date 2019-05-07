@@ -481,6 +481,13 @@ This document specifies the minimum that a driver must implement to be compliant
 The MarkLogic SQL Guide describes the SQL query support in MarkLogic
 - http://docs.marklogic.com/guide/sql/SQLqueries
 
+Successful Connections
+--------
+- BIRT
+- DBVisualizer
+- PrestoDB
+- Squirrel
+
 Opportunities
 --------
 According to [wikipedia](https://en.wikipedia.org/wiki/Comparison_of_database_tools)
@@ -490,7 +497,6 @@ Open source JAVA tools often support only JDBC
 - JasperSoft (JDBC only AFAIK)
 - Pentaho (recommendation to use JDBC drivers over ODBC drivers with Pentaho)
 - Splunk
-- Eclipse BIRT (JDBC only AFAIK)
 - Rapid Miner (JDBC only AFAIK)
 - SpagoBI (JDBC only AFAIK)
 - KNIME (JDBC only AFAIK)
