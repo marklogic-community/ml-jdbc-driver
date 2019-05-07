@@ -485,6 +485,7 @@ Successful Connections
 --------
 - BIRT
 - DBVisualizer
+- Jaspersoft Studio
 - PrestoDB
 - Squirrel
 
