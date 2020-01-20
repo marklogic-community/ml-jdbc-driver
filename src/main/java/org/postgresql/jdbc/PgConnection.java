@@ -811,16 +811,20 @@ public class PgConnection implements BaseConnection {
     }
 
     level = level.toUpperCase(Locale.US);
-    if (level.equals("READ COMMITTED")) {
+//    if (level.equals("READ COMMITTED")) {
+    if (level.equals("ISOLATION LEVEL READ COMMITTED")) {
       return Connection.TRANSACTION_READ_COMMITTED;
     }
-    if (level.equals("READ UNCOMMITTED")) {
+//    if (level.equals("READ UNCOMMITTED")) {
+    if (level.equals("ISOLATION LEVEL READ UNCOMMITTED")) {
       return Connection.TRANSACTION_READ_UNCOMMITTED;
     }
-    if (level.equals("REPEATABLE READ")) {
+//    if (level.equals("REPEATABLE READ")) {
+    if (level.equals("ISOLATION LEVEL REPEATABLE READ")) {
       return Connection.TRANSACTION_REPEATABLE_READ;
     }
-    if (level.equals("SERIALIZABLE")) {
+//    if (level.equals("SERIALIZABLE")) {
+    if (level.equals("ISOLATION LEVEL SERIALIZABLE")) {
       return Connection.TRANSACTION_SERIALIZABLE;
     }
 
