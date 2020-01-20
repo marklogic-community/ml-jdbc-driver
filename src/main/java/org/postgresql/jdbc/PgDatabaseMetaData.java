@@ -1841,6 +1841,18 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
       tuple[2] = rs.getBytes("TABLE_NAME"); // Table name
       tuple[3] = rs.getBytes("COLUMN_NAME"); // Column name
       String typtype = rs.getString("TYPE_NAME");
+      // MarkLogic pg_type_id() can return 0
+      if (typeOid == 0) {
+		  if (typtype.equals("integer")) {
+			  typeOid = 23;
+		  } else if (typtype.equals("short")) {
+			  typeOid = 21;
+		  } else if (typtype.equals("unsignedShort")) {
+			  typeOid = 21;
+		  } else {
+			  typeOid = 1043;
+		  }
+	  }
       int sqlType;
 
       sqlType = connection.getTypeInfo().getSQLType(typeOid);
@@ -2545,7 +2557,7 @@ TIMESTAMP	java.sql.Timestamp
 
     sql = ""
           + "       SELECT 'bool'," + Oid.BOOL
-//          + " UNION SELECT 'bytea'," + Oid.BYTEA
+          + " UNION SELECT 'bytea'," + Oid.BYTEA
           + " UNION SELECT 'char'," + Oid.CHAR
           + " UNION SELECT 'date'," + Oid.DATE
           + " UNION SELECT 'float4'," + Oid.FLOAT4
@@ -2557,7 +2569,7 @@ TIMESTAMP	java.sql.Timestamp
           + " UNION SELECT 'text'," + Oid.TEXT
           + " UNION SELECT 'time'," + Oid.TIME
           + " UNION SELECT 'timestamptz'," + Oid.TIMESTAMPTZ
-//          + " UNION SELECT 'uuid'," + Oid.UUID
+          + " UNION SELECT 'uuid'," + Oid.UUID
           + " UNION SELECT 'varchar'," + Oid.VARCHAR;
 
 
@@ -2611,7 +2623,6 @@ TIMESTAMP	java.sql.Timestamp
       tuple[17] = b10; // everything is base 10
       v.add(tuple);
 
-/* remove serial autoincrement
       // add pseudo-type serial, bigserial
       if (typname.equals("int4")) {
         byte[][] tuple1 = tuple.clone();
@@ -2626,7 +2637,7 @@ TIMESTAMP	java.sql.Timestamp
         tuple1[11] = bt;
         v.add(tuple1);
       }
-*/
+
     }
     rs.close();
     stmt.close();

@@ -618,7 +618,8 @@ public class TypeInfoCache implements TypeInfo {
       case Oid.BPCHAR:
       case Oid.VARCHAR:
         if (typmod == -1) {
-          return _unknownLength;
+//          return _unknownLength;
+          return 255;
         }
         return typmod - 4;
 
