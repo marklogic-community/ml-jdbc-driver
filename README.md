@@ -297,6 +297,7 @@ anyURI = 25 appears to be supported as text
 Gradle Build
 -----------
 - Instructions for full build https://jdbc.postgresql.org/development/development.html
+- Source is Java 1.8 compatible (refer to https://jdbc.postgresql.org/download.html)
 - Be sure to match the protocol version of the driver to the server protocol version.
 - Currently ML 9.0-3 uses PostgreSQL network message protocol version 3 (pg ver 7.4+) with preferQueryMode=simpile
 
@@ -376,7 +377,7 @@ modify "supports*" eg. supportsAlterTable*
 
 Change "attnotnull" from rs.getBoolean("attnotnull") to (rs.getInt("attnotnull") != 0) for IS_NULLABLE and NULLABLE
 
-Remove bytea and uuid data types
+Add support for integer, short, unsignedShort
 
 org/postgresql/jdbc/TimestampUtils
 ------------------
@@ -426,14 +427,17 @@ org/postgresql/MD5Digest
 ----------------
 Change encode algorithm to MD5(user:realm:password)
 
-org/postgresql/jdbc/TypeInfoCache (no change)
+org/postgresql/jdbc/TypeInfoCache 
 ----------------
-data types
+default length for varchar is 255
 
 org/postgresql/core/Oid (no change)
 ----------------
 data types to oid mappings which do not appear to match ML (time vs timetz)
 
+org/postgresql/jdbc/PgResultSet
+------------------
+Change boolean test to handle true/false vs t/f
 
 To Do (todo)
 -----
