@@ -137,6 +137,8 @@ Use loggerFile=pgjdbc-trace.log for capturing log.
 
 Allowed values: OFF, DEBUG or TRACE
 
+`jdbc:marklogic://company.com:5432/?loggerLevel=TRACE&loggerFile=/tmp/pgjdbc-trace.log`
+
 For a full list of options supported by the driver see:
 https://jdbc.postgresql.org/documentation/head/connect.html#connection-parameters
 
@@ -259,6 +261,16 @@ With diagnostic trace events turned on examine the SQL in the ML server log.
 `ODBCConnectionTask ReceiveMessage`
 Queries that start with BEGIN are trying to do transactions which are not supported by ML. It may be as simple as turning on `autocommit`. It may be incompatible if the tool expects transaction support or writes to the database.
 
+BEGIN Transaction
+-----------------
+By default, JDBC connections start in autocommit mode. This means that every executed statement is treated as a separate transaction. A transaction is simply an operation that is irreversibly completed. MarkLogic server does not support the BEGIN transaction syntax and will fail if received.
+
+BEGIN can be "suppressed" at the JDBC driver level. The JDBC driver can ignore the BEGIN request with the risk of presenting an inconsistent view of data.
+
+Modifying the transaction isolation through "SET TRANSACTION ISOLATION LEVEL" returns different syntax in MarkLogic server.
+For example PgConnection.java expects level.equals("READ COMMITTED") and MarkLogic returns "ISOLATION LEVEL READ COMMITTED".
+
+
 SQL Dialects and Extensions
 ---------------
 MarkLogic supports a subset of the SQLite dialect. SQLServer and Oracle have extensions that are not supported. Pseudo columns like ROWID, ROWNUM or extension functions like INSTR, CHARINDEX are specific to Oracle or SQLServer and are not directly supported. On the other hand, MarkLogic provides the fn and xdmp functions (replace colons and dashes with underscore when used in SQL). For example, INSTR can be implemented with MarkLogic supported functions by `fn_subsequence(fn_index_of(fn_string_to_codepoints('a_bc_defg_hi'),fn_string_to_codepoints('_')),2,1)`. Dates are best handled in ML with [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601). Various fn and xdmp functions can work with dates such as `xdmp_parse_dateTime('[D01]/[M01]/[Y0001] [h01]:[m01]:[s01]',create_datetime)`. Non conforming dates can be formatted into ISO-8601 using a TDE. `<val>xdmp_parse_dateTime('[D01]/[M01]/[Y0001] [h01]:[m01]:[s01]',./create_datetime)</val>`.
@@ -378,6 +390,8 @@ Change "attnotnull" from rs.getBoolean("attnotnull") to (rs.getInt("attnotnull")
 
 Add support for integer, short, unsignedShort
 
+Fix getMaxNameLength "The column name typlen was not found in this ResultSet"
+
 org/postgresql/jdbc/TimestampUtils
 ------------------
 Transform ISO-8601 dateTime to datetimetz by replacing 'T' with ' '
@@ -491,6 +505,8 @@ Successful Connections
 - Jaspersoft Studio
 - PrestoDB
 - Squirrel
+- Coveo
+- Informatica
 
 Opportunities
 --------

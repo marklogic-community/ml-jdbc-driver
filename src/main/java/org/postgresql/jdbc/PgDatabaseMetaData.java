@@ -209,7 +209,8 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
           throw new PSQLException(GT.tr("Unable to find name datatype in the system catalogs."),
               PSQLState.UNEXPECTED_ERROR);
         }
-        NAMEDATALEN = rs.getInt("typlen");
+//        NAMEDATALEN = rs.getInt("typlen");
+        NAMEDATALEN = rs.getInt(1);
       } finally {
         JdbcBlackHole.close(rs);
         JdbcBlackHole.close(stmt);
