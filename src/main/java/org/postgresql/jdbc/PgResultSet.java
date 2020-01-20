@@ -1952,7 +1952,9 @@ public class PgResultSet implements ResultSet, org.postgresql.PGRefCursorResultS
     int col = columnIndex - 1;
     if (Oid.BOOL == fields[col].getOID()) {
       final byte[] v = this_row[col];
-      return (1 == v.length) && (116 == v[0]); // 116 = 't'
+//      return (1 == v.length) && (116 == v[0]); // 116 = 't'
+// MarkLogic stores as true/false
+      return (4 == v.length) && (116 == v[0]); // 116 = 't'
     }
 
     if (isBinary(columnIndex)) {

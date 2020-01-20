@@ -106,6 +106,12 @@ let $tde :=
 	      <nullable>true</nullable>
 	    </column>
 	    <column>
+	      <name>"booleanFalse"</name>
+	      <scalar-type>boolean</scalar-type>
+	      <val>xs:boolean(fn:false())</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
 	      <name>"date"</name>
 	      <scalar-type>date</scalar-type>
 	      <val>xs:date("2018-01-01")</val>
