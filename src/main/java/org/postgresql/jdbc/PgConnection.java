@@ -716,20 +716,12 @@ public class PgConnection implements BaseConnection {
       return;
     }
 
-    if (!autoCommit) {
-      throw new PSQLException(GT.tr("AutoCommit false setting is not supported."),
-        PSQLState.NOT_IMPLEMENTED);
-    }
     if (!this.autoCommit) {
-      throw new PSQLException(GT.tr("AutoCommit false default is not supported."),
-        PSQLState.NOT_IMPLEMENTED);
+      commit();
     }
-//    if (!this.autoCommit) {
-//      commit();
-//    }
 
-//    this.autoCommit = autoCommit;
-//    LOGGER.log(Level.FINE, "  setAutoCommit = {0}", autoCommit);
+    this.autoCommit = autoCommit;
+    LOGGER.log(Level.FINE, "  setAutoCommit = {0}", autoCommit);
   }
 
   public boolean getAutoCommit() throws SQLException {
