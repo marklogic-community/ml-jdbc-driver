@@ -311,7 +311,6 @@ The unit tests can be run with:
 
 Copied the original PostgreSQL test classes and found 519
 
-9108 tests succeeded out of the box (8589 failed)
 ```
 9108 tests completed, 8589 failed, 6 skipped
 ```
