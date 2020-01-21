@@ -9,7 +9,7 @@ You should test it in a development environment thoroughly before depending on i
 
 If possible you should use the ODBC drivers supported by MarkLogic. 
 If you can only use JDBC (because for example the tool only supports JDBC) then you have two options for drivers.
-You have a choice of using the JDBC driver from PostgreSQL with no modifications `postgresql-42.1.4.jar` or the enhanced driver `mljdbc-42.1.4.jar` contained in this project.
+You have a choice of using the JDBC driver from PostgreSQL with no modifications `postgresql-42.1.4.jar` or the enhanced driver `mljdbc-42.1.4.jar` with support for schema and metadata functions contained in this project.
 
 B.L.U.F. (Bottom Line Up Front) 
 --------
@@ -353,39 +353,42 @@ Also needed to do the following to get a successful build:
 JAVA 1.7 Build
 --------------
 The driver can be built for jre 1.7 with build.gradle.jre1.7. 
-`
+```
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 def bootClasspathStr = "/MarkLogic/java/rt.jar;/MarkLogic/java/jce.jar"
 project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
     ac.options.bootClasspath = bootClasspathStr // options is always there but not defined on AbstractCompile so going to hit it anyway
 })
-`
+```
 
 A specific version of the Postgres code for 1.7 can be found here but it has not been investigated (refer to https://jdbc.postgresql.org/download.html)
 
 Special attention is needed for the Date handling differences between 1.7 and 1.8.
-`
+```
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-`
+```
 
 Fortunately the maven preprocessor compiler directives identify sections of code that need to be commented out.
 `#if mvn.project.property.postgresql.jdbc.spec >= "JDBC4.2"`
 
 Modify files for 1.7 "JDBC4.2"
-`
+
+```
 src\main\java\org\postgresql\jdbc\PgCallableStatement.java
 src\main\java\org\postgresql\jdbc\PgPreparedStatement.java
 src\main\java\org\postgresql\jdbc\PgResultSet.java
 src\main\java\org\postgresql\jdbc\TimestampUtils.java
 src\main\java\org\postgresql\jdbc\TypeInfoCache.java
 src\test\java\org\postgresql\test\jdbc2\Jdbc2TestSuite.java
-`
+```
+
 Delete files for 1.7 removing tests:
-`
+
+```
 DELETE src\test\java\org\postgresql\test\jdbc2\Jdbc2TestSuite.java
 DELETE src\test\java\org\postgresql\test\jdbc2\RefCursorTest.java
 DELETE src\test\java\org\postgresql\test\jdbc42\GetObject310InfinityTests.java
@@ -395,7 +398,7 @@ DELETE src\test\java\org\postgresql\test\jdbc42\Jdbc42TestSuite.java
 DELETE src\test\java\org\postgresql\test\jdbc42\PreparedStatementTest.java
 DELETE src\test\java\org\postgresql\test\jdbc42\SetObject310Test.java
 DELETE src\test\java\org\postgresql\test\jdbc42\SimpleJdbc42Test.java
-`
+```
 
 Why this version 42.1.4?
 --------------------
@@ -721,6 +724,8 @@ relkind, 0 as oid, 0, 0, -1 from sys.sys_columns) where 1 and relname like
 
 TDE Types (tde.xsd) and pg_type_id and pg_type_size
 --------
+
+```
   <xs:simpleType name="scalar-type">
     <xs:restriction base="xs:NMTOKEN">
       <xs:enumeration value="int"/>
@@ -760,7 +765,9 @@ TDE Types (tde.xsd) and pg_type_id and pg_type_size
       <xs:enumeration value="IRI"/>
     </xs:restriction>
   </xs:simpleType>
+```
 
+```
 [["sql:pg-type-id(\"int\")"],[23]]
 [["sql:pg-type-id(\"unsignedInt\")"],[23]]
 [["sql:pg-type-id(\"long\")"],[20]]
@@ -796,7 +803,9 @@ TDE Types (tde.xsd) and pg_type_id and pg_type_size
 [["sql:pg-type-id(\"unsignedByte\")"],[0]]
 [["sql:pg-type-id(\"unsignedShort\")"],[0]]
 [["sql:pg-type-id(\"IRI\")"],[0]]
+```
 
+```
 [["sql:pg-type-size(\"int\")"],[4]]
 [["sql:pg-type-size(\"unsignedInt\")"],[4]]
 [["sql:pg-type-size(\"long\")"],[8]]
@@ -832,3 +841,4 @@ TDE Types (tde.xsd) and pg_type_id and pg_type_size
 [["sql:pg-type-size(\"unsignedByte\")"],[-1]]
 [["sql:pg-type-size(\"unsignedShort\")"],[-1]]
 [["sql:pg-type-size(\"IRI\")"],[-1]]
+```
