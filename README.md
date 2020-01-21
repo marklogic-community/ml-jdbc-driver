@@ -350,6 +350,52 @@ Also needed to do the following to get a successful build:
 - remove OSGI and SSPI related sources due to missing/unresolvable dependencies
 - remove SharedTimerClassLoaderLeakTest (a unit test) due to missing/unresolvable dependencies
 
+JAVA 1.7 Build
+--------------
+The driver can be built for jre 1.7 with build.gradle.jre1.7. 
+`
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+def bootClasspathStr = "/MarkLogic/java/rt.jar;/MarkLogic/java/jce.jar"
+project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
+    ac.options.bootClasspath = bootClasspathStr // options is always there but not defined on AbstractCompile so going to hit it anyway
+})
+`
+
+A specific version of the Postgres code for 1.7 can be found here but it has not been investigated (refer to https://jdbc.postgresql.org/download.html)
+
+Special attention is needed for the Date handling differences between 1.7 and 1.8.
+`
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+`
+
+Fortunately the maven preprocessor compiler directives identify sections of code that need to be commented out.
+`#if mvn.project.property.postgresql.jdbc.spec >= "JDBC4.2"`
+
+Modify files for 1.7 "JDBC4.2"
+`
+src\main\java\org\postgresql\jdbc\PgCallableStatement.java
+src\main\java\org\postgresql\jdbc\PgPreparedStatement.java
+src\main\java\org\postgresql\jdbc\PgResultSet.java
+src\main\java\org\postgresql\jdbc\TimestampUtils.java
+src\main\java\org\postgresql\jdbc\TypeInfoCache.java
+src\test\java\org\postgresql\test\jdbc2\Jdbc2TestSuite.java
+`
+Delete files for 1.7 removing tests:
+`
+DELETE src\test\java\org\postgresql\test\jdbc2\Jdbc2TestSuite.java
+DELETE src\test\java\org\postgresql\test\jdbc2\RefCursorTest.java
+DELETE src\test\java\org\postgresql\test\jdbc42\GetObject310InfinityTests.java
+DELETE src\test\java\org\postgresql\test\jdbc42\GetObject310Test.java
+DELETE src\test\java\org\postgresql\test\jdbc42\Jdbc42CallableStatementTest.java
+DELETE src\test\java\org\postgresql\test\jdbc42\Jdbc42TestSuite.java
+DELETE src\test\java\org\postgresql\test\jdbc42\PreparedStatementTest.java
+DELETE src\test\java\org\postgresql\test\jdbc42\SetObject310Test.java
+DELETE src\test\java\org\postgresql\test\jdbc42\SimpleJdbc42Test.java
+`
 
 Why this version 42.1.4?
 --------------------
