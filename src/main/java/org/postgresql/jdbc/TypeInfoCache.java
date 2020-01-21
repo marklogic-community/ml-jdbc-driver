@@ -637,9 +637,10 @@ public class TypeInfoCache implements TypeInfo {
         return typmod;
 
       case Oid.VARBIT:
-        if (typmod == -1) {
-          return _unknownLength;
-        }
+      // if -1 (hardcoded) then this is not good
+//        if (typmod == -1) {
+//          return _unknownLength;
+//        }
         return typmod;
 
       case Oid.TEXT:

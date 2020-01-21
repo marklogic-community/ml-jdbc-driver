@@ -214,7 +214,7 @@ The org.postgresql.ssl.jdbc4 package includes the LibPQFactory class which handl
 
 Debugging
 ---------
-To determine if the JDBC driver is in use for a connection, turn on diagnostic trace events for ODBCConnectionTask SendMessage ODBCConnectionTask ReceiveMessage then when a new connection is made the MarkLogic Server log for the ODBC port will contain the following indicating that the JDBC driver is in use (and not the ODBC driver):
+To determine if the JDBC driver is in use for a connection, turn on diagnostic trace events for `ODBCConnectionTask SendMessage` and `ODBCConnectionTask ReceiveMessage` then when a new connection is made the MarkLogic Server log for the ODBC port will contain the following indicating that the JDBC driver is in use (and not the ODBC driver):
 
 `Info: [Event:id=ODBCConnectionTask ReceiveMessage] => Q SET application_name = 'MarkLogic JDBC Driver'` or 'PostgreSQL JDBC Driver'
 
@@ -313,9 +313,12 @@ Gradle Build
 - Be sure to match the protocol version of the driver to the server protocol version.
 - Currently ML 9.0-3 uses PostgreSQL network message protocol version 3 (pg ver 7.4+) with preferQueryMode=simpile
 
-A working build using Gradle has been created and pushed on the "gradle-build" branch. This build ensures that all static final variables are updated.
+A working build using Gradle has been created on the master branch. This build ensures that all static final variables are updated.
 
-The jar can be built using:
+The jar can be built:
+              `gradle build`
+
+The jar can be built without tests using:
               `gradle build -x test`
 
 The unit tests can be run with:

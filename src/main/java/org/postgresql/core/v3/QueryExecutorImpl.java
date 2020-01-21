@@ -287,7 +287,8 @@ public class QueryExecutorImpl extends QueryExecutorBase {
     boolean autosave = false;
     try {
       try {
-        handler = sendQueryPreamble(handler, flags);
+        LOGGER.log(Level.WARNING, "Suppress sending BEGIN from execute sendQueryPreamble.");
+//        handler = sendQueryPreamble(handler, flags);
         autosave = sendAutomaticSavepoint(query, flags);
         sendQuery(query, (V3ParameterList) parameters, maxRows, fetchSize, flags,
             handler, null);
@@ -444,7 +445,8 @@ public class QueryExecutorImpl extends QueryExecutorBase {
     boolean autosave = false;
     ResultHandler handler = batchHandler;
     try {
-      handler = sendQueryPreamble(batchHandler, flags);
+      LOGGER.log(Level.WARNING, "Suppress sending BEGIN from execute sendQueryPreamble.");
+//      handler = sendQueryPreamble(batchHandler, flags);
       autosave = sendAutomaticSavepoint(queries[0], flags);
       estimatedReceiveBufferBytes = 0;
 
@@ -507,6 +509,7 @@ public class QueryExecutorImpl extends QueryExecutorBase {
 
     beginFlags = updateQueryMode(beginFlags);
 
+    LOGGER.log(Level.FINEST, "Sending BEGIN sendQueryPreamble.");
     sendOneQuery(beginTransactionQuery, SimpleQuery.NO_PARAMETERS, 0, 0, beginFlags);
 
     // Insert a handler that intercepts the BEGIN.
@@ -1734,6 +1737,25 @@ public class QueryExecutorImpl extends QueryExecutorBase {
   //
   private void sendOneQuery(SimpleQuery query, SimpleParameterList params, int maxRows,
       int fetchSize, int flags) throws IOException {
+
+
+
+    if (query.getNativeSql().toUpperCase().startsWith("BEGIN")) {
+        LOGGER.log(Level.WARNING, "Ignoring SQL statement starting with BEGIN: {0}", query);
+		query = NULL_QUERY ;
+    }
+    if (query.getNativeSql().toUpperCase().startsWith("COMMIT")) {
+        LOGGER.log(Level.WARNING, "Ignoring SQL statement starting with COMMIT: {0}", query);
+		query = NULL_QUERY;
+    }
+    if (query.getNativeSql().toUpperCase().startsWith("ROLLBACK")) {
+        LOGGER.log(Level.WARNING, "Ignoring SQL statement starting with ROLLBACK: {0}", query);
+		query = NULL_QUERY;
+    }
+
+
+
+
     boolean asSimple = (flags & QueryExecutor.QUERY_EXECUTE_AS_SIMPLE) != 0;
     if (asSimple) {
       assert (flags & QueryExecutor.QUERY_DESCRIBE_ONLY) == 0
@@ -2746,6 +2768,11 @@ public class QueryExecutorImpl extends QueryExecutorBase {
           new NativeQuery("", new int[0], false,
               SqlCommand.createStatementTypeInfo(SqlCommandType.BLANK)
           ), null, false);
+
+  private final SimpleQuery NULL_QUERY =
+      new SimpleQuery(
+          new NativeQuery("SELECT 'BEGIN'", new int[0], false, SqlCommand.BLANK),
+          null, false);
 
   private final SimpleQuery autoSaveQuery =
       new SimpleQuery(

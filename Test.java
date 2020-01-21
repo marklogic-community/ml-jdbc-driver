@@ -8,11 +8,16 @@ public class Test {
             Class myClass = Class.forName("com.marklogic.Driver");
             System.out.println("Before getConnection");
             DriverManager.setLogStream(System.out);
-            Connection conn = DriverManager.getConnection("jdbc:marklogic://localhost:8077/?loggerLevel=DEBUG","admin","admin");
+            Connection conn = DriverManager.getConnection("jdbc:marklogic://localhost:8077/?loggerLevel=TRACE","admin","admin");
             System.out.println("Connected successfully");
             // JAVA SQL code
 
             conn.setAutoCommit(false);
+            conn.setTransactionIsolation(conn.TRANSACTION_READ_UNCOMMITTED);
+            System.out.println("=========================================================================================================================");
+            System.out.println("getTransactionIsolation");
+            System.out.println(conn.getTransactionIsolation());
+            conn.setReadOnly(true);
 
 			DatabaseMetaData md = conn.getMetaData();
 			ResultSet rs;
@@ -41,6 +46,7 @@ public class Test {
 				}
 				System.out.println("");
 			}
+            System.out.println("getColumns-------------------------------------------------------");
 			rs = md.getColumns(null, null, null, null);
 			rsmd = rs.getMetaData();
 			columnsNumber = rsmd.getColumnCount();
@@ -52,6 +58,7 @@ public class Test {
 				}
 				System.out.println("");
 			}
+            conn.commit();
 
             Statement stmt = conn.createStatement();
             String sql = "SELECT SCHEMA, NAME FROM SYS_TABLES";
@@ -67,6 +74,34 @@ public class Test {
                 System.out.print("\n");
             }
             rs.close();
+            conn.commit();
+			System.out.println("Done commit");
+
+            sql = "BEGIN;SELECT SCHEMA, NAME, length(NAME) as NAMELEN FROM SYS_TABLES";
+            System.out.println("Before executeQuery BEGIN statement...");
+            rs = stmt.executeQuery(sql);
+            System.out.println("After executeQuery");
+            rs.close();
+
+            Statement stmt2 = conn.createStatement();
+            String sql2 = "SELECT SCHEMA, NAME, length(NAME) as NAMELEN FROM SYS_TABLES";
+            System.out.println("Before executeQuery statement...");
+            rs = stmt2.executeQuery(sql2);
+            System.out.println("Extract data from ResultSet");
+            while(rs.next()){
+                String schema = rs.getString("SCHEMA");
+                String name = rs.getString("NAME");
+
+                System.out.print("SCHEMA: " + schema);
+                System.out.print(", NAME: " + name);
+                System.out.print("\n");
+            }
+            rs.close();
+            conn.rollback();
+			System.out.println("Done rollback");
+			stmt.close();
+			stmt2.close();
+			conn.close();
         }
         catch (Exception e) {
             e.printStackTrace();
