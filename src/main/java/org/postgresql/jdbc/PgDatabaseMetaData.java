@@ -1553,9 +1553,9 @@ public class PgDatabaseMetaData implements DatabaseMetaData {
 //          + " WHERE nspname <> 'pg_toast' AND (nspname !~ '^pg_temp_' "
 //          + " OR nspname = (pg_catalog.current_schemas(true))[1]) AND (nspname !~ '^pg_toast_temp_' "
 //          + " OR nspname = replace((pg_catalog.current_schemas(true))[1], 'pg_temp_', 'pg_toast_temp_')) ";
-    sql = "SELECT name AS TABLE_SCHEM, '' AS TABLE_CATALOG FROM sys.sys_schemas";
+    sql = "SELECT name AS TABLE_SCHEM, '' AS TABLE_CATALOG FROM sys.sys_schemas WHERE 1";
     if (schemaPattern != null && !schemaPattern.isEmpty()) {
-      sql += " AND nspname LIKE " + escapeQuotes(schemaPattern);
+      sql += " AND name LIKE " + escapeQuotes(schemaPattern);
     }
     sql += " ORDER BY TABLE_SCHEM";
 
