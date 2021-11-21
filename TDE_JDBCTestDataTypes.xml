@@ -1,5 +1,12 @@
 xquery version "1.0-ml";
 
+xdmp:document-insert("/test/JDBCTestDataTypes.xml", document{<envelope/>},
+          (
+            xdmp:permission("rest-reader", "read"),
+            xdmp:permission("rest-writer", "update")
+          )
+);
+
 import module namespace tde = "http://marklogic.com/xdmp/tde" 
         at "/MarkLogic/tde.xqy";
 
@@ -37,6 +44,7 @@ point		point
 
 let $tde :=
 <template xmlns="http://marklogic.com/xdmp/tde">
+  <enabled>{fn:true()}</enabled>
   <description>Template Driven Extraction for JDBC Test</description>
   <context>/envelope</context>
   <rows>
@@ -127,6 +135,18 @@ let $tde :=
 	      <name>"dateTime"</name>
 	      <scalar-type>dateTime</scalar-type>
 	      <val>xs:dateTime("2018-01-01T00:00:00")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"dateTimeZ"</name>
+	      <scalar-type>dateTime</scalar-type>
+	      <val>xs:dateTime("2018-01-01T00:00:00Z")</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
+	      <name>"dateTimeEST"</name>
+	      <scalar-type>dateTime</scalar-type>
+	      <val>xs:dateTime("2018-01-01T00:00:00-05:00")</val>
 	      <nullable>true</nullable>
 	    </column>
 	    <column>
@@ -239,7 +259,7 @@ let $tde :=
 </template>
 return
 tde:template-insert(
-          "/tde-template/" ||  "TDE_JDBCTestDataTypes" || ".xml",
+          "/tde-template/" ||  "TDE_JDBCTestDataTypes" || ".tdex",
           $tde,
           (
             xdmp:permission("rest-reader", "read"),

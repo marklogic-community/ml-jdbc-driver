@@ -3,9 +3,9 @@ plugins {
     id "idea"
 }
 
-version = '0.4'
+version = '0.5'
 ext.majorversion = '0'
-ext.minorversion = '4'
+ext.minorversion = '5'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

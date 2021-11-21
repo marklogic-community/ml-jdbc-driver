@@ -297,10 +297,10 @@ Data Type Mappings
 
 Troubles with dateTime are not a type mapping but a content problem: Trailing junk on timestamp: 'T00:00:00' at org.postgresql.jdbc.TimestampUtils.parseBackendTimestamp(TimestampUtils.java:339)
 
-Java does not support ISO-8601 dateTime. Java datetimetz does not use the 'T' delimiter found in ISO-8601.
+Driver did not support ISO-8601 dateTime. Java datetimetz does not use the 'T' delimiter found in ISO-8601.
 `'2013-01-02 03:04:05.060708 +9:00'` vs `2013-01-02T03:04:05.060708 +9:00` Work around does not work fn:format-dateTime(xs:dateTime("2013-01-02T03:04:05.060708 +9:00"),  "[Y0001]-[M01]-[D01] [H01]:[m01]:[s01].[f01] [z]","en","AD","US")
 
-Modified TimestampUtils
+Modified TimestampUtils parseBackendTimestamp
 
 Could look at cast(dateTime as timestamptz)
 
@@ -313,18 +313,18 @@ Gradle Build
 - Instructions for full build https://jdbc.postgresql.org/development/development.html
 - Source is Java 1.8 compatible (refer to https://jdbc.postgresql.org/download.html)
 - Be sure to match the protocol version of the driver to the server protocol version.
-- Currently ML 9.0-3 uses PostgreSQL network message protocol version 3 (pg ver 7.4+) with preferQueryMode=simpile
+- Currently ML 9.0-3 uses PostgreSQL network message protocol version 3 (pg ver 7.4+) with preferQueryMode=simple
 
 A working build using Gradle has been created on the master branch. This build ensures that all static final variables are updated.
 
 The jar can be built:
-              `gradle build`
+              `gradlew build`
 
 The jar can be built without tests using:
-              `gradle build -x test`
+              `gradlew build -x test`
 
 The unit tests can be run with:
-              `gradle test`
+              `gradlew test`
 
 Copied the original PostgreSQL test classes and found 519
 
@@ -448,7 +448,9 @@ Fix getMaxNameLength "The column name typlen was not found in this ResultSet"
 
 org/postgresql/jdbc/TimestampUtils
 ------------------
-Transform ISO-8601 dateTime to datetimetz by replacing 'T' with ' '
+Update parseBackendTimestamp
+Parse ISO-8601 dateTime to datetimetz by consuming 'T' in date
+Parse UTC by consuming 'Z' in timezone
 
 org/postgresql/jdbc/PgResultSetMetaData
 ------------------
@@ -547,7 +549,7 @@ getNumericFunctions
 getSystemFunctions
 getDateFunctions
 
-Setup TDE with data types [TDE_JDBCTestDataTypes.xml](https://github.com/marklogic-community/ml-jdbc-driver/blob/master/TDE_JDBCTestDataTypes.xml) (string, int, unsignedInt, long, unsignedLong, decimal, float, double, boolean, date, time, dateTime, anyUri)
+Setup TDE with data types [TDE_JDBCTestDataTypes.xml](https://github.com/marklogic-community/ml-jdbc-driver/blob/master/TDE_JDBCTestDataTypes.xml) (string, int, unsignedInt, long, unsignedLong, decimal, float, double, boolean, date, time, dateTime, dateTimeZ, dateTimeEST, anyUri)
 
 Reference
 ---------
@@ -610,9 +612,9 @@ DbVisualizer is the universal database tool for developers, DBAs and analysts.[s
 
 Tools - Tool Properties - Driver Manager - Search Path - Add
 
-Tools - Tool Properties - Database - PostgreSQL 
+//Tools - Tool Properties - Database - PostgreSQL 
 
-Tools - Driver Manager - PostgreSQL
+Tools - Driver Manager -> Add
 
 Tools - Connection Wizard - make MarkLogicSQL - add property use URL form
 

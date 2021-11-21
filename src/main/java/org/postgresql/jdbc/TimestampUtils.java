@@ -177,9 +177,7 @@ public class TimestampUtils {
    * Load date/time information into the provided calendar returning the fractional seconds.
    */
   private ParsedTimestamp parseBackendTimestamp(String str) throws SQLException {
-//    char[] s = str.toCharArray();
-// Hack for ISO-8601
-    char[] s = str.replace('T', ' ').toCharArray();
+    char[] s = str.toCharArray();
     int slen = s.length;
 
     // This is pretty gross..
@@ -195,7 +193,9 @@ public class TimestampUtils {
     // whitespace
     // hh:mm:ss
     // whitespace
+    //   or T
     // timezone in one of the formats: +hh, -hh, +hh:mm, -hh:mm
+    //   or Z (UTC)
     // whitespace
     // if date is present, an era specifier: AD or BC
     // trailing whitespace
@@ -231,6 +231,13 @@ public class TimestampUtils {
         // day of month
         end = firstNonDigit(s, start);
         result.day = number(s, start, end);
+
+        // ISO 8601 
+        sep = charAt(s, end);
+        if (sep == 'T') {
+          start = end + 1; // Skip 'T'
+          end = end + 1;
+        }
 
         start = skipWhitespace(s, end); // Skip trailing whitespace
       }
@@ -325,6 +332,13 @@ public class TimestampUtils {
 
         start = skipWhitespace(s, start); // Skip trailing whitespace
       }
+      // ISO 8601 UTC
+      sep = charAt(s, start);
+      if (sep == 'Z') {
+        start = end + 1; // Skip 'Z'
+        result.tz = getCalendar('+', 0, 0, 0); // set to GMT/UTC/Z
+        start = skipWhitespace(s, start); // Skip trailing whitespace
+      }
 
       if (result.hasDate && start < slen) {
         String eraString = new String(s, start, slen - start);
@@ -336,19 +350,18 @@ public class TimestampUtils {
           start += 2;
         }
       }
-
       if (start < slen) {
         throw new NumberFormatException(
             "Trailing junk on timestamp: '" + new String(s, start, slen - start) + "'");
       }
-
       if (!result.hasTime && !result.hasDate) {
         throw new NumberFormatException("Timestamp has neither date nor time");
       }
 
     } catch (NumberFormatException nfe) {
       throw new PSQLException(
-          GT.tr("Bad value for type timestamp/date/time: {1}", str),
+//          GT.tr("parseBackendTimestamp bad value for type timestamp/date/time: {1}", str),
+          nfe.toString(),
           PSQLState.BAD_DATETIME_FORMAT, nfe);
     }
 
