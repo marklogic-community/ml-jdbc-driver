@@ -446,7 +446,9 @@ Add support for integer, short, unsignedShort
 
 Fix getMaxNameLength "The column name typlen was not found in this ResultSet"
 
-Add support for getTables when types is ['TABLE'] where MarkLogic sys_tables.type uses 'tde'
+Add support for getTables when types is ['TABLE'] where MarkLogic sys_tables.type uses 'TDE'
+
+Add support for getTables when types is ['TABLE'] where MarkLogic sys_tables.type uses 'QBV'
 
 org/postgresql/jdbc/TimestampUtils
 ------------------
@@ -570,6 +572,7 @@ Successful Connections
 - Squirrel
 - Coveo
 - Informatica
+- Tibco DTV
 
 Opportunities
 --------
